@@ -15,12 +15,24 @@ export class AuthService {
     console.log('login credentials',logincredentials);
     return of ({logincredentials})
 }
+
+logout(){
+  //remove user from subject
+  this.setUser(null);
+  console.log("user has been logged out!");
+}
 get user(){
  return this.user$.asObservable();
 }
 register(user:any) {
-  this.user$.next(user);
+
+  //make a api call to save user in database
+  //update the user subject
+  this.setUser(user)
   console.log(`registered user successfully`, user);
   return of (user);
 }
+  setUser(user: any) {
+    return this.user$.next(user);
+  }
 }
