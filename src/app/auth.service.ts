@@ -15,7 +15,17 @@ export class AuthService {
   login(email: string, password: string) {
     const logincredentials ={email,password};
     console.log('login credentials',logincredentials);
-    return of ({logincredentials})
+    return this.httpClient.post<User>(`${this.apiUrl}login`,logincredentials).pipe(
+      switchMap(foundUser=>{
+        this.setUser(foundUser);
+        console.log(`user login successfully`, foundUser);
+        return of(foundUser);
+      }),
+      catchError(e=>{
+        console.log(`Your Login details could not be verified Please try again`,e);
+        return throwError(`Your Login details could not be verified.Please try again!`);
+      })
+    );
 }
 
 logout(){
